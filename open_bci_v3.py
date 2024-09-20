@@ -76,8 +76,7 @@ class OpenBCIBoard(object):
         self.audio = False
 
         if not port:
-            # port = self.find_port()
-            port = "COM3"
+            port = self.find_port()
         self.port = port
         print("Connecting to V3 at port %s" % (port))
 
