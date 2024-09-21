@@ -1,6 +1,8 @@
 import numpy as np
 import scipy.io.wavfile as wvf
-from generate_pulse_signal import generate_pulse_signal  # Ensure this imports correctly
+from generate_pulse_signal import generate_pulse_signal 
+
+MAX_INT16 = 32767
 
 def generate_audio_file(filename, A, t, f, DC, show_graph=False):
     """
@@ -25,7 +27,7 @@ def generate_audio_file(filename, A, t, f, DC, show_graph=False):
     signal, _ = generate_pulse_signal(A, t, f, DC, show_graph=show_graph)
 
     # Scale the signal to the range of int16 for audio
-    audio_signal = np.int16(signal / np.max(np.abs(signal)) * 32767)
+    audio_signal = np.int16(signal / np.max(np.abs(signal)) * MAX_INT16)
 
     # Save the audio signal to a WAV file
     wvf.write(filename, f, audio_signal)
