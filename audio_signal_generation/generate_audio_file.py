@@ -23,7 +23,7 @@ def generate_audio_file(A, f, DC, T, n, save_graph=False):
     n : int
         Number of repetitions of the pulse to add.
     save_graph : bool, optional
-        If True, displays the pulse signal graph. Default is False.
+        If True, saves the pulse signal graph. Default is False.
     """
     # Define the directory where audio files will be saved
     directory = 'audio_files'
@@ -47,10 +47,10 @@ def generate_audio_file(A, f, DC, T, n, save_graph=False):
 # Example of using the function
 if __name__ == "__main__":
     A = 1       # Amplitude
-    T = 1       # Period of the signal
+    T = 2       # Period of the signal
     f = 1000    # Sampling frequency in Hz
     n = 4       # Number of repetitions of the pulse
-    DC = 0.1    # Duty cycle as a fraction (50%)
+    DC = 0.4    # Duty cycle as a fraction (50%)
 
     # Generate and save the audio file
     generate_audio_file(A, f, DC, T, n, save_graph=True)
