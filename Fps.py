@@ -36,7 +36,8 @@ if __name__ == "__main__":
     for i in range(1,1000):
         ffps.step()
 
-    print ("Estimated frames per second: {0}".format(ffps.toc()))
+    # print ("Estimated frames per second: {0}".format(ffps.toc()))
+    print ("{0}".format(ffps.toc()))
 
     for i in range(1,1000000):
         ffps.steptoc()
