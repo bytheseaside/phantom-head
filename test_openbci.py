@@ -14,6 +14,7 @@ import threading
 
 def beep(n):
     if n == 0:
+      print("done")
       file.close()
       return
     handle_sample({'channel_data': [random.randint(-20000,20000)]})
@@ -47,6 +48,7 @@ def butter_bandpass_filter(data, lowcut, highcut, fs, order=5):
 
 ffps = Fps()
 ffps.tic()
+fs = 250.0
 data = []
 ani = None
 file = open(f"output_{datetime.now().strftime('%H:%M:%S')}.txt", "a")  # append mode
@@ -74,9 +76,7 @@ def handle_sample(sample):
   write_to_file(sample_data)
 
 def write_to_file(sample_data):
-  # print("write to file")
-  # file.write(f"{sample_data['timestamp']};{sample_data['fps']};{sample_data['channel_data']}\n")
-  file.write(f"aaaa\n")
+  file.write(f"{sample_data['timestamp']};{sample_data['fps']};{sample_data['channel_data']}\n")
 
 def update_plot(i, xs, ys):
   last_sample = data[-1]
@@ -93,36 +93,35 @@ def update_plot(i, xs, ys):
 
 
 if __name__ == '__main__':
-
-  fs = 250.0
-
-  parser = argparse.ArgumentParser("test_openbci")
-  parser.add_argument("--test", action="store_true", help="Simulate OpenBCI stream.")
-  args = parser.parse_args()
-  
-  file.write("timestamp;fps;channel_data\n")
-
-  if args.test:
-    start_time = datetime.now()
-    beep(100000)
-  else:
-    board = OpenBCIBoard()
-    board.print_register_settings()
-    board.get_radio_channel_number()
-    print(f'OpenBCI connected to radio channel {board.radio_channel_number}')
-
-
-  if not args.test:
-    board.start()
-    start_time = datetime.now()
-    board.start_streaming(handle_sample)
-  
-  ani = animation.FuncAnimation(fig, update_plot, fargs=(xs, ys), interval=1000)
-  plt.show()
-  
-  if not args.test:
-    ani.save(f"output_{datetime.now().strftime('%H:%M:%S')}.gif", writer='imagemagick', fps=30)
-    file.close()
-    board.checktimer.cancel()
-    board.disconnect()
+  try:
+    parser = argparse.ArgumentParser("test_openbci")
+    parser.add_argument("--test", action="store_true", help="Simulate OpenBCI stream.")
+    args = parser.parse_args()
     
+    file.write("timestamp;fps;channel_data\n")
+
+    if args.test:
+      start_time = datetime.now()
+      beep(30)
+    else:
+      board = OpenBCIBoard()
+      board.print_register_settings()
+      board.get_radio_channel_number()
+      print(f'OpenBCI connected to radio channel {board.radio_channel_number}')
+
+
+    if not args.test:
+      board.start()
+      start_time = datetime.now()
+      board.start_streaming(handle_sample)
+    
+    ani = animation.FuncAnimation(fig, update_plot, fargs=(xs, ys), interval=1000)
+    plt.show()
+    
+    if not args.test:
+      ani.save(f"output_{datetime.now().strftime('%H:%M:%S')}.gif", writer='imagemagick', fps=30)
+      board.checktimer.cancel()
+      board.disconnect()
+      
+  except KeyboardInterrupt:
+    file.close()
